@@ -1,0 +1,93 @@
+{
+	"name": "df_union",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_emp_db",
+						"type": "DatasetReference"
+					},
+					"name": "Empsource"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_dept_table",
+						"type": "DatasetReference"
+					},
+					"name": "Depsource1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_salgrade_table",
+						"type": "DatasetReference"
+					},
+					"name": "SalGradeSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sink_dataflow",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "union1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EMPNO as decimal(4,0),",
+				"          ENAME as string,",
+				"          JOB as string,",
+				"          MGR as decimal(4,0),",
+				"          HIREDATE as timestamp,",
+				"          SAL as decimal(7,2),",
+				"          COMM as decimal(7,2),",
+				"          DEPTNO as decimal(2,0)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> Empsource",
+				"source(output(",
+				"          DEPTNO as decimal(2,0),",
+				"          DNAME as string,",
+				"          LOC as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> Depsource1",
+				"source(output(",
+				"          GRADE as decimal(18,0),",
+				"          LOSAL as decimal(18,0),",
+				"          HISAL as decimal(18,0)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> SalGradeSource",
+				"Empsource, Depsource1, SalGradeSource union(byName: true)~> union1",
+				"union1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          dept_name as string,",
+				"          dept_id as string",
+				"     ),",
+				"     partitionFileNames:['Df_union.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

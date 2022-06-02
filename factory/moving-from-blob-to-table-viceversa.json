@@ -1,0 +1,9 @@
+{
+	"name": "moving-from-blob-to-table-viceversa",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "94d4f454-9c8c-495f-b644-bbfddec197cb",
+		"tenantId": "ebe29a52-595b-41e9-9f1b-2a926a2a6c51"
+	}
+}

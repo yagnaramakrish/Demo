@@ -1,0 +1,71 @@
+{
+	"name": "df_alter_row",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_emp_db",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sink_emp_table",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "alterRow1"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EMPNO as decimal(4,0),",
+				"          ENAME as string,",
+				"          JOB as string,",
+				"          MGR as decimal(4,0),",
+				"          HIREDATE as timestamp,",
+				"          SAL as decimal(7,2),",
+				"          COMM as decimal(7,2),",
+				"          DEPTNO as decimal(2,0)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 alterRow(deleteIf(DEPTNO==10)) ~> alterRow1",
+				"alterRow1 select(mapColumn(",
+				"          EMPNO,",
+				"          ENAME,",
+				"          SAL,",
+				"          DEPTNO",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

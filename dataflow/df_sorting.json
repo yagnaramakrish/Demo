@@ -1,0 +1,60 @@
+{
+	"name": "df_sorting",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_emp_db",
+						"type": "DatasetReference"
+					},
+					"name": "emp"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sink_dataflow",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "sorting"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EMPNO as decimal(4,0),",
+				"          ENAME as string,",
+				"          JOB as string,",
+				"          MGR as decimal(4,0),",
+				"          HIREDATE as timestamp,",
+				"          SAL as decimal(7,2),",
+				"          COMM as decimal(7,2),",
+				"          DEPTNO as decimal(2,0)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> emp",
+				"emp sort(asc(SAL, true),",
+				"     caseInsensitive: true) ~> sorting",
+				"sorting sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          dept_name as string,",
+				"          dept_id as string",
+				"     ),",
+				"     partitionFileNames:['df_sort.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"name": "ds_sink_emp_table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_db_prod_tables_keyvault",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DeletedEmployees"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

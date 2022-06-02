@@ -1,0 +1,19 @@
+{
+	"name": "ADLS_Ge2",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://azuregen27052022.dfs.core.windows.net",
+			"accountKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "gen2_keyvault",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "adls-keyvaults"
+			}
+		}
+	}
+}

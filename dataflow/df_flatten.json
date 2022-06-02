@@ -1,0 +1,66 @@
+{
+	"name": "df_flatten",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_emp_json",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_emp_json",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "flatten1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          firstName as string,",
+				"          lastName as string,",
+				"          gender as string,",
+				"          age as integer,",
+				"          address as (streetAddress as string, city as string, state as string),",
+				"          phoneNumbers as (type as string, number as string)[]",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'singleDocument') ~> source1",
+				"source1 foldDown(unroll(phoneNumbers, phoneNumbers),",
+				"     mapColumn(",
+				"          firstName,",
+				"          address,",
+				"          phoneNumbers",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          firstName as string,",
+				"          lastName as string,",
+				"          gender as string,",
+				"          age as integer,",
+				"          address as (streetAddress as string, city as string, state as string),",
+				"          phoneNumbers as (type as string, number as string)[]",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

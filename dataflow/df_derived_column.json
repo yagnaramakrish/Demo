@@ -1,0 +1,60 @@
+{
+	"name": "df_derived_column",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_emp_db",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_derviedcolumn_output",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EMPNO as decimal(4,0),",
+				"          ENAME as string,",
+				"          JOB as string,",
+				"          MGR as decimal(4,0),",
+				"          HIREDATE as timestamp,",
+				"          SAL as decimal(7,2),",
+				"          COMM as decimal(7,2),",
+				"          DEPTNO as decimal(2,0)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 derive(Type_of_class = iif(SAL>1000,'ok','not ok'),",
+				"          Bonus = SAL+((SAL*10)/100)) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          Name as string,",
+				"          Category as string,",
+				"          Status as string,",
+				"          Error as string",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}

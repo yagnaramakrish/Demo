@@ -1,0 +1,70 @@
+{
+	"name": "df_rank_denseRank",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_emp_db",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sink_dataflow",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "rank1"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EMPNO as decimal(4,0),",
+				"          ENAME as string,",
+				"          JOB as string,",
+				"          MGR as decimal(4,0),",
+				"          HIREDATE as timestamp,",
+				"          SAL as decimal(7,2),",
+				"          COMM as decimal(7,2),",
+				"          DEPTNO as decimal(2,0)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 rank(desc(SAL, true),",
+				"     output(RankingSalary as long)) ~> rank1",
+				"rank1 select(mapColumn(",
+				"          SAL,",
+				"          RankBasedOnSal = RankingSalary,",
+				"          Dept_No = DEPTNO",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          dept_name as string,",
+				"          dept_id as string",
+				"     ),",
+				"     partitionFileNames:['df_rank_denseRank.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

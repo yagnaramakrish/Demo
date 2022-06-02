@@ -1,0 +1,38 @@
+{
+	"name": "ds_customer_table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_customer_table",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "cid",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "cname",
+				"type": "varchar"
+			},
+			{
+				"name": "sales",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "inserted_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "customer"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

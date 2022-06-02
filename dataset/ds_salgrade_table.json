@@ -1,0 +1,36 @@
+{
+	"name": "ds_salgrade_table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_db_prod_tables_keyvault",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "GRADE",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 0
+			},
+			{
+				"name": "LOSAL",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 0
+			},
+			{
+				"name": "HISAL",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "SALGRADE"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

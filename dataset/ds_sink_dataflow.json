@@ -1,0 +1,33 @@
+{
+	"name": "ds_sink_dataflow",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_Blob_storage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "emp_hike.csv",
+				"container": "emp"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "dept_name",
+				"type": "String"
+			},
+			{
+				"name": "dept_id",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
