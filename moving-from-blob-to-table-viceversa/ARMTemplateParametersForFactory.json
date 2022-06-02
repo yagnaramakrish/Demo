@@ -1,0 +1,39 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "moving-from-blob-to-table-viceversa"
+		},
+		"ls_customer_table_connectionString": {
+			"value": ""
+		},
+		"ls_emp_table_connectionString": {
+			"value": ""
+		},
+		"ls_target_table_connectionString": {
+			"value": ""
+		},
+		"ADLS_Ge2_properties_typeProperties_url": {
+			"value": "https://azuregen27052022.dfs.core.windows.net"
+		},
+		"Keyvault_prod_db_properties_typeProperties_baseUrl": {
+			"value": "https://key-vault-28052022.vault.azure.net/"
+		},
+		"blob_storage_keyvault_properties_typeProperties_baseUrl": {
+			"value": "https://key-vault-28052022.vault.azure.net/"
+		},
+		"gen2_keyvault_properties_typeProperties_baseUrl": {
+			"value": "https://key-vault-28052022.vault.azure.net/"
+		},
+		"ls_Blob_storage_properties_typeProperties_connectionString_secretName": {
+			"value": "blob-secret"
+		},
+		"ls_db_prod_tables_keyvault_properties_typeProperties_connectionString_secretName": {
+			"value": "prod-secret"
+		},
+		"prod_DB_properties_typeProperties_connectionString_secretName": {
+			"value": "prod-secret"
+		}
+	}
+}
